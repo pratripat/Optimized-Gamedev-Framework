@@ -116,8 +116,8 @@ class Entity(pygame.sprite.Sprite):
         if self.current_animation_id == animation:
             return
 
-        if animation in self.animations.animations:
-            self.current_animation = self.animations.get_animation(animation)
+        if animation in self.animation_handler.animations:
+            self.current_animation = self.animation_handler.get_animation(animation)
             self.current_animation_id = animation
 
     def set_position(self, position):
@@ -178,3 +178,7 @@ class Entity(pygame.sprite.Sprite):
     @property
     def animation_center(self):
         return [self.position[0]+self.image.get_width()/2, self.position[1]+self.image.get_height()/2]
+
+    @property
+    def original_rect(self):
+        return pygame.FRect(*self.position, *self.current_animation.image.get_size())

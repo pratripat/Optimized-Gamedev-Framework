@@ -1,5 +1,5 @@
 import pygame, os, json
-from .functions import load_images_from_spritesheet
+from .functions import load_images_from_spritesheet, load_image
 
 folder_path = 'data/graphics/animations'
 
@@ -36,7 +36,10 @@ class Animation_Data:
         self.load_data(path, config, spritesheet_index)
     
     def load_data(self, path, config, spritesheet_index):
-        self.original_images = self.images = load_images_from_spritesheet(path)[spritesheet_index:spritesheet_index + len(config['frames'])]
+        images = load_images_from_spritesheet(path)[spritesheet_index:spritesheet_index + len(config['frames'])]
+        if images == []: self.original_images = self.images = load_image(path) 
+        else: self.original_images = self.images = images
+
         self.config = config
 
         # flips the images horizontally if required

@@ -9,19 +9,31 @@ class Camera:
         self.speed = 1
         self.screen_shake = 0
 
+        self.follow_cursor = True
+        self.cursor_following_ratio = 0.05
+
     def update(self, constraints=None):
         if self.time == 0:
             self.screen_shake = 0
 
         #Moves camera towards target
         if self.target:
-            delx = (self.target.center[0]-self.scroll.x-self.game.window.display_surface.get_width()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake)
-            dely = (self.target.animation_center[1]-self.scroll.y-self.game.window.display_surface.get_height()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake)
+            position = self.target.animation_center
+            
+            if self.follow_cursor: 
+                cursor = self.game.input.mouse_position
+                position[0] += (cursor[0] - position[0] + self.scroll.x) * self.cursor_following_ratio
+                position[1] += (cursor[1] - position[1] + self.scroll.y) * self.cursor_following_ratio
+
+            delx = (position[0]-self.scroll.x-self.game.window.display_surface.get_width()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake)
+            dely = (position[1]-self.scroll.y-self.game.window.display_surface.get_height()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake)
             self.scroll.x += delx
             self.scroll.y += dely
 
-            if (abs(delx) > self.screen_shake or abs(dely) > self.screen_shake):
-                self.game.renderer.update_visible_tiles()
+
+            # updating game state
+            if (abs(delx) > 1 or abs(dely) > 1):
+                self.game.current_game_state.append('cameramovement')
 
         if self.time > 0:
             self.time -= 1

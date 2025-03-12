@@ -1,0 +1,14 @@
+{
+  "cards_menu": {
+    "render_according_to_scroll": false,
+    "position": ["center", "center"]
+  },
+  "swap_cards_menu": {
+    "render_according_to_scroll": false,
+    "position": ["center", 500]
+  },
+  "death_menu": {
+    "render_according_to_scroll": false,
+    "position": ["center", 500]
+  }
+}

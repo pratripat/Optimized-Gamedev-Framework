@@ -686,5 +686,47 @@
             "centered": false,
             "flip": false
         }
+    },
+    "vegetation": {
+        "0": {
+            "frames": [
+                0
+            ],
+            "loop": false,
+            "speed": 1,
+            "scale": 3,
+            "centered": false,
+            "flip": false
+        }, 
+        "1": {
+            "frames": [
+                1
+            ],
+            "loop": false,
+            "speed": 1,
+            "scale": 3,
+            "centered": false,
+            "flip": false
+        },
+        "2": {
+            "frames": [
+                2
+            ],
+            "loop": false,
+            "speed": 1,
+            "scale": 3,
+            "centered": false,
+            "flip": false
+        },
+        "3": {
+            "frames": [
+                3
+            ],
+            "loop": false,
+            "speed": 1,
+            "scale": 3,
+            "centered": false,
+            "flip": false
+        }
     }
 }
