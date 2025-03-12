@@ -26,14 +26,19 @@ class Game:
         self.entity_handler.load_entities()
 
         self.camera.set_target(self.entity_handler.player)
-        self.camera.set_speed(0.3)
+        self.camera.set_speed(0.03)
 
-        self.renderer.update_visible_tiles()
+        self.level.update_visible_tiles()
+
+        self.current_game_state = [] # currently nthg is going on in the game
 
     def update(self):
+        self.current_game_state.clear() # resetting the current game status to nthg
+
         self.window.update()        
         self.input.update()
         self.camera.update()
+        self.level.update()
         # entity update
         self.entity_handler.update(self.window.dt)
 

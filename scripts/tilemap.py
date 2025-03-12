@@ -1,5 +1,5 @@
 import pygame, json
-from .functions import load_image, load_images_from_spritesheet
+from .functions import load_image, load_images_from_spritesheet, SCALE
 
 ''' JSON FILE
 [
@@ -12,18 +12,19 @@ from .functions import load_image, load_images_from_spritesheet
 {layer_id: {chunk_pos: {tile_pos: [id, pos, image, filepath, spritesheetindex, imagescale]}}}
 '''
 
+
 class Tilemap:
-    SCALE = 3
     TILE_RES = 32*SCALE
     CHUNK_SIZE = 8
 
-    def __init__(self, filename, updated_tilemap_filenames={}):
+    def __init__(self, filename, updated_tilemap_filenames={}, layer_ids_for_chunk_images=[]):
         self.filename = filename
         self.layers = {}
-        self.load(updated_tilemap_filenames)
+        self.chunk_images = {}
+        self.load(updated_tilemap_filenames, layer_ids_for_chunk_images)
 
     # loads all the tiles from the json file
-    def load(self, updated_tilemap_filenames):
+    def load(self, updated_tilemap_filenames, layer_ids_for_chunk_images=[]):
         data = json.load(open(self.filename, 'r'))
 
         layers, tilemaps = data
@@ -36,18 +37,8 @@ class Tilemap:
                 
                 filepath = list(tilemaps.keys())[filepath_index]
 
-                # # data/graphics/spritesheet/black_castlefloor.png ------> castlefloor
-                # short_filename = filepath.split('.')[0].split('_')[-1]
-                # if short_filename in updated_tilemap_filenames:
-                #     new_filename = updated_tilemap_filenames[short_filename]
-                #     folder_path = '/'.join([i for i in filepath.split('/')[:-1]])
-
-                #     filepath = folder_path + '/' + new_filename + '.png'
-
-                if spritesheet_index == None:
-                    image = load_image(filepath, scale=image_scale)
-                else:
-                    image = load_images_from_spritesheet(filepath, image_scale)[spritesheet_index]
+                if spritesheet_index == None: image = load_image(filepath, scale=image_scale)
+                else: image = load_images_from_spritesheet(filepath, image_scale)[spritesheet_index]
 
                 chunk, chunk_position = self.get_chunk(layer_id, position)
                 chunk[tuple(position)] = {
@@ -60,7 +51,31 @@ class Tilemap:
                     'spritesheet_index': spritesheet_index,
                     'scale': image_scale
                 }
-                print(layer_id, position)
+            
+            # create chunk images for the layers that are needed
+            if layer_id in layer_ids_for_chunk_images:
+                self.create_chunk_images(layer_id)
+    
+    # this creates an image for each chunk so that we can render the chunks instead of the individual tiles
+    def create_chunk_images(self, layer_id):
+        self.chunk_images[layer_id] = {}
+        for chunk_pos in self.layers[layer_id]:
+            chunk = self.layers[layer_id][chunk_pos]
+            chunk_image = pygame.Surface((self.TILE_RES*self.CHUNK_SIZE, self.TILE_RES*self.CHUNK_SIZE)).convert()
+            chunk_image.fill((0,0,0))
+
+            for tile_pos in chunk:
+                tile = chunk[tile_pos]
+                chunk_image.blit(tile['image'], (tile_pos[0]-chunk_pos[0], tile_pos[1]-chunk_pos[1]))
+            
+            self.chunk_images[layer_id][chunk_pos] = chunk_image
+    
+    # renders the tiles
+    def render(self, display_surface, scroll, visible_tiles_data, layer_ids):
+        for layer_id in layer_ids:
+            if layer_id not in visible_tiles_data: continue
+            for chunk_pos, chunk in visible_tiles_data[layer_id].items():
+                display_surface.blit(self.chunk_images[layer_id][chunk_pos], [chunk_pos[0]-scroll.x, chunk_pos[1]-scroll.y])
 
     # returns the tiles, chunk_pos
     def get_chunk(self, layer_id, position):
@@ -88,7 +103,6 @@ class Tilemap:
             tiles, chunk_position = self.get_chunk(layer_id, new_position)
             tile = tiles.get(tuple(new_position))
             if tile == None:
-                print(tile_pos, new_position)
                 continue
             neighbors.append(tile)
         return neighbors

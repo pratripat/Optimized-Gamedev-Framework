@@ -1,8 +1,13 @@
-import pygame, os
+import pygame, os, json
 
 default_colorkey = (0, 0, 0)
 filepath_exceptions = {'json'}
 
+collison_boxes_path = 'data/configs/collision_boxes.json'
+COLLISION_BOXES = json.load(open(collison_boxes_path))
+SCALE = 3
+
+# Loading the image from the filepath
 def load_image(filepath, colorkey=default_colorkey, scale=1):
     image = pygame.image.load(filepath).convert()
     image.set_colorkey(colorkey)

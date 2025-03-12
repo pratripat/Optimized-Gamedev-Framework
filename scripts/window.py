@@ -12,6 +12,8 @@ class Window:
     def update(self):
         self.clock.tick()
         self.calculate_dt()
+
+        print(self.clock.get_fps(), end='\r')
     
     def calculate_dt(self):
         # dt calculation

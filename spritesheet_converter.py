@@ -128,3 +128,17 @@ def convert_to_new_spritesheet(spritesheet_filepath):
         posx += image.get_width()
     
     pygame.image.save(new_spritesheet, 'trial.png')
+
+pygame.init()
+screen = pygame.display.set_mode((100, 100))
+
+while True:
+    file = input('Enter file (end -> e): ')
+
+    if file == 'e': break
+
+    try:
+        convert_to_new_spritesheet(file)
+    except Exception as e:
+        print(e)
+        print('Try again')

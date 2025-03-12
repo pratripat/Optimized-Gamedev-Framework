@@ -4,7 +4,7 @@ from .chess_piece import Chess_Piece
 class Player(Chess_Piece):
     def __init__(self, game, tile):
         super().__init__(game, tile, game.player_color, 'pawn')
-        self.speed = 10
+        self.speed = 2
 
     def update(self, dt):
         self.update_inputs()
