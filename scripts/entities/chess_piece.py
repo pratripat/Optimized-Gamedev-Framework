@@ -1,34 +1,16 @@
-from ..entity import Entity
+import pygame
+from .top_down_entity import TopDownEntity
 
-class Chess_Piece(Entity):
+class Chess_Piece(TopDownEntity):
     def __init__(self, game, tile, color, chess_piece_type):
-        position = list(tile.keys())[0]
-        super().__init__(f'{color}_{chess_piece_type}', position, game.animation_handler, 'idle')
-        self.tile = tile
-        self.game = game
+        super().__init__(game, tile, f'{color}_{chess_piece_type}', 'idle')
         self.color = color
         self.chess_piece_type = chess_piece_type
-        self.speed = 1 # default speed
 
-    def update(self, dt):
-        super().update(dt)
+        self.load_collision_box_and_hit_box(chess_piece_type)
 
-        self.update_state()
-        self.update_animation()
-        self.move([], dt)
-    
-    def update_state(self):
-        self.state = {'idle': False, 'moving': False, 'shooting': False, 'special_attack': False}
+    def draw(self, surface, scroll=[0,0]):
+        super().render_shadow(surface, scroll)
+        super().draw(surface, scroll)
+        pygame.draw.rect(surface, (255,0,0), [self.hit_box[0]-scroll[0], self.hit_box[1]-scroll[1], self.hit_box[2], self.hit_box[3]], 1)
 
-        if self.velocity.x != 0 or self.velocity.y != 0:
-            self.state['moving'] = True
-        else:
-            self.state['idle'] = True
-    
-    def update_animation(self):
-        animation_state = 'idle'
-        
-        if self.state['moving']:
-            animation_state = 'moving'
-
-        self.set_animation(animation_state)

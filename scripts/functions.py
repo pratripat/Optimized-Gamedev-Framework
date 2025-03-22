@@ -1,10 +1,11 @@
-import pygame, os, json
+import pygame, os, json, math
 
 default_colorkey = (0, 0, 0)
 filepath_exceptions = {'json'}
 
 collison_boxes_path = 'data/configs/collision_boxes.json'
 COLLISION_BOXES = json.load(open(collison_boxes_path))
+INITIAL_WINDOW_SIZE = (1200, 600)
 SCALE = 3
 
 # Loading the image from the filepath
@@ -158,6 +159,19 @@ def convert_folder_to_spritesheet(path):
         posy += animation_spritesheet.get_height()
 
     pygame.image.save(spritesheet, f'{path.split("/")[-1]}.png')
+
+def normalize_vector(vector, desired_magnitude_squared=1):
+    magnitude_squared = vector[0]**2+vector[1]**2
+
+    # no normalizing needed if it is already normalized
+    if desired_magnitude_squared == magnitude_squared:
+        return vector
+
+    # only if there is a need for normalizing, it is done
+    if magnitude_squared > 0:
+        return [vector[0] * math.sqrt(desired_magnitude_squared/magnitude_squared), vector[1] * math.sqrt(desired_magnitude_squared/magnitude_squared)]
+
+    return [0, 0]
 
 # Makes the error more readible for later
 def error_message(error_messages):

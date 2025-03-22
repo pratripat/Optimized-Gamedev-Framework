@@ -30,7 +30,7 @@ class Entity(pygame.sprite.Sprite):
 
     def render_shadow(self, screen, scroll, position=None, size=None, offset=[0,0], color=(120, 120, 120)):
         if not position:
-            position = [self.position[0], self.position[1]+self.image.get_height()*0.9090909]
+            position = [self.position[0], self.position[1]+self.image.get_height()*0.9]
         if not size:
             size = [self.image.get_width(), self.image.get_height()//5]
 

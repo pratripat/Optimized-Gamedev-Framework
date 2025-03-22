@@ -62,7 +62,7 @@ class Tilemap:
         for chunk_pos in self.layers[layer_id]:
             chunk = self.layers[layer_id][chunk_pos]
             chunk_image = pygame.Surface((self.TILE_RES*self.CHUNK_SIZE, self.TILE_RES*self.CHUNK_SIZE)).convert()
-            chunk_image.fill((0,0,0))
+            chunk_image.set_colorkey((0,0,0))
 
             for tile_pos in chunk:
                 tile = chunk[tile_pos]
@@ -80,7 +80,7 @@ class Tilemap:
     # returns the tiles, chunk_pos
     def get_chunk(self, layer_id, position):
         chunk_res = self.TILE_RES * self.CHUNK_SIZE
-        chunk_position = (position[0]//chunk_res*chunk_res, position[1]//chunk_res*chunk_res)
+        chunk_position = ((position[0]//chunk_res)*chunk_res, (position[1]//chunk_res)*chunk_res)
         if chunk_position not in self.layers[layer_id]: 
             self.layers[layer_id][chunk_position] = {}
 

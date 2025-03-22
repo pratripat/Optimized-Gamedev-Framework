@@ -49,8 +49,9 @@ class Animation_Data:
         self.resize_images(self.config['scale'])
 
     def resize_images(self, scale=1):
-        if scale != 1:
-            self.images = [pygame.transform.scale(image, (image.get_width()*scale, image.get_height()*scale)) for image in self.original_images]
+        if scale == 1: return
+
+        self.images = [pygame.transform.scale(image, (image.get_width()*scale, image.get_height()*scale)) for image in self.original_images]
 
     #Returns total number of frames of the animation
     def get_frames(self):
