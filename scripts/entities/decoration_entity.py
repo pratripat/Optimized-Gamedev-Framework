@@ -2,11 +2,12 @@ import pygame
 from ..functions import COLLISION_BOXES, SCALE
 
 class DecorationEntity(pygame.sprite.Sprite):
-    def __init__(self, game, id, decoration_id, position, spritesheet_index):
+    def __init__(self, game, id, decoration_id, position, chunk_pos, spritesheet_index):
         super().__init__()
         self.game = game
         self.id = id
         self.decoration_id = decoration_id
+        self.chunk_pos = chunk_pos
         self.spritesheet_index = spritesheet_index
         self.animation_id = f'vegetation_{spritesheet_index}'
         self.animation = game.animation_handler.get_animation(self.animation_id)
@@ -35,3 +36,11 @@ class DecorationEntity(pygame.sprite.Sprite):
     @property
     def position(self):
         return self.rect.topleft - self.offset
+
+    @property
+    def animation_center(self):
+        return [self.position[0]+self.image.get_width()/2, self.position[1]+self.image.get_height()/2]
+
+    @property
+    def image(self):
+        return self.animation.image

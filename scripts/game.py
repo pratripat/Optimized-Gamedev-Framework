@@ -11,20 +11,27 @@ pygame.init()
 
 class Game:
     def __init__(self):
+        self.time = 1
+        
         self.window = Window()
         self.camera = Camera(self)
         self.renderer = Renderer(self)
         self.input = Input()
         self.animation_handler = Animation_Handler()
 
+        # level stuff
         self.level = Level(self)
         self.level.load_level(0)
 
+        # pawns gambit stuff
         self.player_color = 'black'
         self.enemy_color = 'white'
+
+        # entity handler
         self.entity_handler = Entity_Handler(self)
         self.entity_handler.load_entities()
 
+        # default camera settings
         self.camera.set_target(self.entity_handler.player)
         self.camera.set_speed(0.03)
 
@@ -39,6 +46,7 @@ class Game:
         self.input.update()
         self.camera.update()
         self.level.update()
+        self.renderer.update()
         # entity update
         self.entity_handler.update(self.window.dt)
 
@@ -49,4 +57,14 @@ class Game:
         while 1:
             self.update()
             self.render()
+        
+    def set_camera_speed(self, speed):
+        self.camera.set_speed(speed)
+    
+    def set_camera_target(self, target):
+        self.camera.set_target(target)
+
+    def set_collidables(self, collidable_ids):
+        self.entity_handler.collidable_entity_ids = collidable_ids
+        self.entity_handler.update_collidables()
     

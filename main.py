@@ -1,3 +1,5 @@
 from scripts.game import Game
 
-Game().run()
+game = Game()
+game.set_collidables(['vegetation'])
+game.run()

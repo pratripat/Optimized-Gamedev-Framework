@@ -8,9 +8,13 @@ class Camera:
         self.time = 0
         self.speed = 1
         self.screen_shake = 0
-
-        self.follow_cursor = True
+        
+        self.follow_cursor = False
         self.cursor_following_ratio = 0.05
+
+    def follow_cursor(self, cursor_following_ratio=0.05):
+        self.follow_cursor = True
+        self.cursor_following_ratio = cursor_following_ratio
 
     def update(self, constraints=None):
         if self.time == 0:
@@ -25,14 +29,13 @@ class Camera:
                 position[0] += (cursor[0] - position[0] + self.scroll.x) * self.cursor_following_ratio
                 position[1] += (cursor[1] - position[1] + self.scroll.y) * self.cursor_following_ratio
 
-            delx = (position[0]-self.scroll.x-self.game.window.display_surface.get_width()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake)
-            dely = (position[1]-self.scroll.y-self.game.window.display_surface.get_height()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake)
+            delx = round((position[0]-self.scroll.x-self.game.window.display_surface.get_width()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake), 2)
+            dely = round((position[1]-self.scroll.y-self.game.window.display_surface.get_height()/2) * self.speed + random.uniform(-self.screen_shake, self.screen_shake), 2)
             self.scroll.x += delx
             self.scroll.y += dely
 
-
             # updating game state
-            if (abs(delx) > 1 or abs(dely) > 1):
+            if (abs(delx) > 0 or abs(dely) > 0):
                 self.game.current_game_state.append('cameramovement')
 
         if self.time > 0:
